@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ecomme Admin</title>
+<script>
+  try{var t=localStorage.getItem('ecomme-theme');
+  if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}
+</script>
+
+<link rel="stylesheet" href="assets/app.css"></head><body>
+<main id="login" class="center" hidden>
+  <div class="card"><h1>Ecomme Admin</h1><p>Acesso restrito à equipe autorizada.</p>
+    <button id="btn-google" class="btn">Entrar com Google</button>
+  </div>
+</main>
+<main id="denied" class="center" hidden>
+  <div class="card"><h1>Acesso negado</h1><p>Este e-mail não está autorizado.</p><button id="btn-back" class="btn">Voltar</button></div>
+</main>
+  
+  <div id="app" class="shell" hidden>
+    <aside>
+      <b class="logo">Ecomme <small>Admin</small></b>
+      <nav id="nav"></nav>
+      <button id="btn-theme" class="ghost">Tema</button>
+      <button id="btn-out" class="ghost">Sair</button>
+    </aside>
+  <section>
+    <header id="who"></header>
+    <div id="view"></div>
+  </section>
+  </div>
+  <dialog id="dlg"></dialog>
+  
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>
