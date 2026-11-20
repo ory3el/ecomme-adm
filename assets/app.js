@@ -1,10 +1,12 @@
 (() => {
 const C = window.ADMIN_CONFIG, sb = supabase.createClient(C.SUPABASE_URL, C.SUPABASE_ANON_KEY);
 const $ = s => document.querySelector(s);
-const h = (t, p = {}, ...k) => { const e = Object.assign(document.createElement(t), p); e.append(...k); return e; };
+const h = (t, p = {}, ...k) => { const e = Object.assign(document.createElement(t), p); e.append(...k); return e; }; // textContent-safe
 let me = null;
+const Admin = window.Admin = { sb, h, $, mods: [], routes: {}, me: () => me };
 const show = id => ['login', 'denied', 'app'].forEach(x => $('#' + x).hidden = x !== id);
 const errMsg = e => e?.message === 'forbidden' ? 'Sem permissão.' : (e?.message || 'Erro de consulta.');
+Admin.errMsg = errMsg; Admin.can = p => !!me && (me.role === 'admin' || me.permissions.includes(p));
 
 async function boot() {
   const { data: { session } } = await sb.auth.getSession();
@@ -13,24 +15,25 @@ async function boot() {
   if (error || !data) { await sb.auth.signOut(); return show('denied'); }
   me = data; $('#who').textContent = `${me.email} · ${me.role === 'admin' ? 'Gerente' : 'Funcionário'}`;
   const can = p => me.role === 'admin' || me.permissions.includes(p);
-  const items = [['dashboard', 'Dashboard', 'dashboard.view'], ['stores', 'Lojas', 'stores.view']].filter(i => can(i[2]));
-  $('#nav').replaceChildren(...items.map(i => h('a', { href: '#' + i[0], textContent: i[1], id: 'n-' + i[0] })));
+  const items = [['dashboard', 'Dashboard', 'dashboard.view', 'dashboard'], ['stores', 'Lojas', 'stores.view', 'stores'], ...Admin.mods.map(m => [m.id, m.title, m.perm, m.icon])].filter(i => can(i[2]));
+  $('#nav').replaceChildren(...items.map(i => Admin.navItem(i)));
   show('app'); route();
 }
 function route() {
   const r = location.hash.slice(1).split('?')[0] || 'dashboard';
   document.querySelectorAll('nav a').forEach(a => a.classList.toggle('on', a.id === 'n-' + r));
-  ({ dashboard, stores }[r] || dashboard)();
+  ({ dashboard, stores, ...Admin.routes }[r] || dashboard)();
 }
 async function dashboard() {
   const v = $('#view'); v.replaceChildren(h('div', { className: 'grid' }, ...Array(6).fill().map(() => h('div', { className: 'skel' }))));
   const { data, error } = await sb.rpc('admin_dashboard_counts');
   if (error) return v.replaceChildren(h('p', { className: 'err', textContent: errMsg(error) }));
-  const cards = [['users', 'Usuários', ''], ['users_paused', 'Contas pausadas', ''], ['stores_pending', 'Lojas pendentes', '#stores?s=pendente'],
-    ['stores_active', 'Lojas ativas', '#stores?s=ativa'], ['stores_suspended', 'Suspensas/rejeitadas', '#stores?s=suspensa'], ['products_paused', 'Produtos pausados', ''],
-    ['product_reports_open', 'Denúncias abertas', ''], ['feedback_open', 'Feedbacks abertos', ''], ['payouts_requested', 'Saques pendentes', '']];
+  const cards = [['users', 'Usuários', '#users'], ['users_paused', 'Contas pausadas', '#users?s=paused'], ['stores_pending', 'Lojas pendentes', '#stores?s=pendente'],
+    ['stores_active', 'Lojas ativas', '#stores?s=ativa'], ['stores_suspended', 'Suspensas/rejeitadas', '#stores?s=suspensa'], ['products_paused', 'Produtos pausados', '#products?s=paused'],
+    ['product_reports_open', 'Denúncias abertas', '#reports?s=pending'], ['feedback_open', 'Feedbacks abertos', '#feedback?s=pending'], ['payouts_requested', 'Saques pendentes', '#payouts?s=requested']];
   v.replaceChildren(h('div', { className: 'grid' }, ...cards.map(([k, l, href]) =>
     h('a', { className: 'card', href: href || undefined }, h('b', { textContent: String(data[k] ?? 0) }), h('span', { textContent: l })))));
+  Admin.afterDashboard && Admin.afterDashboard(v);
 }
 async function stores() {
   const q = new URLSearchParams(location.hash.split('?')[1] || '');
@@ -68,5 +71,5 @@ $('#btn-out').onclick = async () => { await sb.auth.signOut(); location.hash = '
 $('#btn-back').onclick = () => show('login');
 $('#btn-theme').onclick = () => { const r = document.documentElement, n = { undefined: 'light', light: 'dark', dark: undefined }[r.dataset.theme];
   n ? r.dataset.theme = n : delete r.dataset.theme; try { n ? localStorage.setItem('ecomme-theme', n) : localStorage.removeItem('ecomme-theme'); } catch (e) {} };
-addEventListener('hashchange', () => me && route()); boot();
+addEventListener('hashchange', () => me && route()); addEventListener('DOMContentLoaded', boot);
 })();
