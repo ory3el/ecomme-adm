@@ -61,7 +61,20 @@ function listModule(m) {
       pg.replaceChildren();
       if (error) return box.replaceChildren(h('p', { className: 'err', textContent: err(error) }));
       if (!data.rows.length) return box.replaceChildren(h('p', { className: 'muted', style: 'padding:16px', textContent: 'Nenhum registro encontrado.' }));
-      box.replaceChildren(h('table', {}, h('tr', {}, ...m.cols.map(c => h('th', { textContent: c[1] }))), ...data.rows.map(r => {
+      // Na listagem de produtos, prioriza anúncios ativos e, dentro de cada
+      // grupo, produtos vinculados a uma loja. O sort é estável: preserva a
+      // ordem original do servidor quando os critérios são iguais.
+      const rows = m.id === 'products' ? [...data.rows].sort((a, b) => {
+        const paused = r => ['paused', 'pausado'].includes(String(r.badge ?? r.status ?? '').trim().toLowerCase());
+        const hasStore = r => {
+          const id = r.loja_id ?? r.store_id;
+          if (id != null) return String(id).trim() !== '';
+          const name = String(r.loja ?? r.nome_loja ?? r.store_name ?? '').trim().toLowerCase();
+          return !!name && !['—', '-', 'sem loja'].includes(name);
+        };
+        return Number(paused(a)) - Number(paused(b)) || Number(!hasStore(a)) - Number(!hasStore(b));
+      }) : data.rows;
+      box.replaceChildren(h('table', {}, h('tr', {}, ...m.cols.map(c => h('th', { textContent: c[1] }))), ...rows.map(r => {
         const tr = h('tr', { className: 'row' }, ...m.cols.map(c => h('td', {}, cell(c[2] ? c[2](r[c[0]], r) : r[c[0]])))); tr.onclick = () => detail(m, r, load); return tr; })));
       const pages = Math.max(1, Math.ceil(data.total / PAGE));
       pg.append(h('button', { className: 'ghost', textContent: '‹ Anterior', disabled: page === 0, onclick: () => { page--; load(); } }), h('span', { className: 'muted', textContent: `Página ${page + 1} de ${pages} · ${data.total} registros` }),
