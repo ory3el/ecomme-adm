@@ -40,3 +40,50 @@ dialog textarea,dialog input{width:100%;margin:4px 0}.hist{border-top:1px solid 
 .perms{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;margin:8px 0}.perms label{font-size:13px;display:flex;gap:6px;align-items:center}.perms input{width:auto;margin:0}
 @media(max-width:860px){.shell{grid-template-columns:1fr}aside{position:fixed;left:0;top:0;height:calc(100vh - 24px);transform:translateX(-110%);transition:transform .25s}.shell.open aside{transform:none}
  #btn-menu{display:block}section{padding:14px}#btn-collapse{display:none}.perms{grid-template-columns:1fr}dialog dl{grid-template-columns:1fr}}
+
+/* Scrollbar personalizada — acompanha automaticamente os temas claro e escuro. */
+:root{
+  --scrollbar-track:rgba(66,135,245,.07);
+  --scrollbar-thumb:rgba(66,135,245,.42);
+  --scrollbar-thumb-hover:rgba(66,135,245,.72);
+}
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme=light]){
+    --scrollbar-track:rgba(255,255,255,.045);
+    --scrollbar-thumb:rgba(126,164,255,.48);
+    --scrollbar-thumb-hover:rgba(153,184,255,.82);
+  }
+}
+:root[data-theme=dark]{
+  --scrollbar-track:rgba(255,255,255,.045);
+  --scrollbar-thumb:rgba(126,164,255,.48);
+  --scrollbar-thumb-hover:rgba(153,184,255,.82);
+}
+
+*{
+  scrollbar-width:thin;
+  scrollbar-color:var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar{
+  width:10px;
+  height:10px;
+}
+*::-webkit-scrollbar-track{
+  background:var(--scrollbar-track);
+  border-radius:999px;
+}
+*::-webkit-scrollbar-thumb{
+  background:linear-gradient(180deg,var(--scrollbar-thumb),var(--blue));
+  background-clip:padding-box;
+  border:3px solid transparent;
+  border-radius:999px;
+  min-height:32px;
+}
+*::-webkit-scrollbar-thumb:hover{
+  background:linear-gradient(180deg,var(--scrollbar-thumb-hover),var(--blue));
+  background-clip:padding-box;
+}
+*::-webkit-scrollbar-corner{
+  background:transparent;
+}
