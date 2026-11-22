@@ -1,17 +1,82 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ecomme Admin</title>
-<script>try{var t=localStorage.getItem('ecomme-theme');if(t==='light'||t==='dark')document.documentElement.dataset.theme=t}catch(e){}</script>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/app.css"></head><body>
-<link rel="icon" id="favicon" type="image/png" href="https://ecomme-co.pages.dev/images/favicon.png">
-<main id="login" class="center" hidden><div class="card"><img class="brand" src="https://ecomme-co.pages.dev/images/mainlogo.png" alt="Ecomme" onerror="this.hidden=true"><h1>Ecomme Admin</h1><p>Acesso restrito à equipe autorizada.</p><button id="btn-google" class="btn">Entrar com Google</button></div></main>
-<main id="denied" class="center" hidden><div class="card"><h1>Acesso negado</h1><p>Este e-mail não está autorizado.</p><button id="btn-back" class="btn">Voltar</button></div></main>
-<div id="app" class="shell" hidden>
- <aside><div class="brandrow"><img class="brand" src="https://ecomme-co.pages.dev/images/mainlogo.png" alt="Ecomme" onload="this.nextElementSibling.hidden=true" onerror="this.hidden=true"><b class="logo">Ecomme <small>Admin</small></b><button id="btn-collapse" class="ghost" title="Recolher menu">«</button></div>
-  <nav id="nav"></nav><button id="btn-theme" class="ghost">Tema</button><button id="btn-out" class="ghost">Sair</button></aside>
- <section><header class="top"><button id="btn-menu" class="ghost" title="Menu">☰</button><span id="who"></span></header><div id="view"></div></section>
-</div>
-<dialog id="dlg"></dialog>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
-<script src="assets/config.js"></script><script src="assets/app.js"></script><script src="assets/modules.js"></script></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ecomme Admin</title>
+
+  <script>
+    try {
+      var theme = localStorage.getItem('ecomme-theme');
+      if (theme === 'light' || theme === 'dark') {
+        document.documentElement.dataset.theme = theme;
+      }
+    } catch (error) {
+    }
+  </script>
+
+  <link rel="icon" id="favicon" type="image/png" href="https://ecomme-co.pages.dev/images/favicon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/app.css">
+</head>
+<body>
+  <main id="login" class="center" hidden>
+    <div class="card">
+      <img
+        class="brand"
+        src="https://ecomme-co.pages.dev/images/mainlogo.png"
+        alt="Ecomme"
+        onerror="this.hidden = true"
+      >
+      <h1>Ecomme Admin</h1>
+      <p>Acesso restrito à equipe autorizada.</p>
+      <button id="btn-google" class="btn">Entrar com Google</button>
+    </div>
+  </main>
+
+  <main id="denied" class="center" hidden>
+    <div class="card">
+      <h1>Acesso negado</h1>
+      <p>Este e-mail não está autorizado.</p>
+      <button id="btn-back" class="btn">Voltar</button>
+    </div>
+  </main>
+
+  <div id="app" class="shell" hidden>
+    <aside>
+      <div class="brandrow">
+        <img
+          class="brand"
+          src="https://ecomme-co.pages.dev/images/mainlogo.png"
+          alt="Ecomme"
+          onload="this.nextElementSibling.hidden = true"
+          onerror="this.hidden = true"
+        >
+        <b class="logo">Ecomme <small>Admin</small></b>
+        <button id="btn-collapse" class="ghost" title="Recolher menu">«</button>
+      </div>
+
+      <nav id="nav"></nav>
+      <button id="btn-theme" class="ghost">Tema</button>
+      <button id="btn-out" class="ghost">Sair</button>
+    </aside>
+
+    <section>
+      <header class="top">
+        <button id="btn-menu" class="ghost" title="Menu">☰</button>
+        <span id="who"></span>
+      </header>
+      <div id="view"></div>
+    </section>
+  </div>
+
+  <dialog id="dlg"></dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+  <script src="assets/config.js"></script>
+  <script src="assets/app.js"></script>
+  <script src="assets/modules.js"></script>
+</body>
+</html>
