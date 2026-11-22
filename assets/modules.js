@@ -185,4 +185,17 @@ const sh = document.querySelector('.shell'); try { if (localStorage.getItem('eco
 $('#btn-collapse').onclick = () => { sh.classList.toggle('collapsed'); try { localStorage.setItem('ecomme-nav', sh.classList.contains('collapsed') ? '1' : '0'); } catch (e) {} };
 $('#btn-menu').onclick = () => sh.classList.toggle('open');
 $('#nav').addEventListener('click', () => sh.classList.remove('open'));
+
+// FAVICON
+const favicon = document.getElementById('favicon');
+function verificarTema(e) {
+  if (e.matches) {
+    favicon.href = 'https://ecomme-co.pages.dev/images/favicon.png';
+  } else {
+    favicon.href = 'https://ecomme-co.pages.dev/images/favicon.png';
+  }
+}
+const mqEscuro = window.matchMedia('(prefers-color-scheme: dark)');
+verificarTema(mqEscuro);
+mqEscuro.addEventListener('change', verificarTema);
 })();
